@@ -1,31 +1,38 @@
+GIT
+  remote: http://github.com/relevance/rcov.git
+  revision: 8e4baa0
+  specs:
+    rcov (0.9.9)
+    rcov (0.9.9-java)
+
 PATH
   remote: padrino
   specs:
-    padrino (0.9.14)
-      padrino-admin (= 0.9.14)
-      padrino-core (= 0.9.14)
-      padrino-gen (= 0.9.14)
-      padrino-helpers (= 0.9.14)
-      padrino-mailer (= 0.9.14)
+    padrino (0.9.15)
+      padrino-admin (= 0.9.15)
+      padrino-core (= 0.9.15)
+      padrino-gen (= 0.9.15)
+      padrino-helpers (= 0.9.15)
+      padrino-mailer (= 0.9.15)
 
 PATH
   remote: padrino-admin
   specs:
-    padrino-admin (0.9.14)
-      padrino-core (= 0.9.14)
-      padrino-gen (= 0.9.14)
-      padrino-helpers (= 0.9.14)
+    padrino-admin (0.9.15)
+      padrino-core (= 0.9.15)
+      padrino-gen (= 0.9.15)
+      padrino-helpers (= 0.9.15)
 
 PATH
   remote: padrino-cache
   specs:
-    padrino-cache (0.9.14)
-      padrino-core (= 0.9.14)
+    padrino-cache (0.9.15)
+      padrino-core (= 0.9.15)
 
 PATH
   remote: padrino-core
   specs:
-    padrino-core (0.9.14)
+    padrino-core (0.9.15)
       activesupport (>= 2.3.8)
       http_router (>= 0.3.13)
       sinatra (>= 1.0.0)
@@ -34,24 +41,24 @@ PATH
 PATH
   remote: padrino-gen
   specs:
-    padrino-gen (0.9.14)
+    padrino-gen (0.9.15)
       bundler (>= 1.0.0.rc.2)
       git
-      padrino-core (= 0.9.14)
+      padrino-core (= 0.9.15)
 
 PATH
   remote: padrino-helpers
   specs:
-    padrino-helpers (0.9.14)
+    padrino-helpers (0.9.15)
       i18n (>= 0.4.1)
-      padrino-core (= 0.9.14)
+      padrino-core (= 0.9.15)
 
 PATH
   remote: padrino-mailer
   specs:
-    padrino-mailer (0.9.14)
+    padrino-mailer (0.9.15)
       mail (>= 2.2.0)
-      padrino-core (= 0.9.14)
+      padrino-core (= 0.9.15)
 
 GEM
   remote: http://rubygems.org/
@@ -108,8 +115,6 @@ GEM
     rack-test (0.5.4)
       rack (>= 1.0)
     rake (0.8.7)
-    rcov (0.9.8)
-    rcov (0.9.8-java)
     ruby-prof (0.9.1)
     shoulda (2.11.1)
     sinatra (1.0)
@@ -148,7 +153,7 @@ DEPENDENCIES
   padrino-mailer!
   rack-test (>= 0.5.0)
   rake (>= 0.8.7)
-  rcov (>= 0.9.8)
+  rcov (= 0.9.9)!
   ruby-prof (>= 0.9.1)
   shoulda (>= 2.10.3)
   webrat (>= 0.5.1)
