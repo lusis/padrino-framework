@@ -20,10 +20,10 @@ module Padrino
         def field_type(type)
           type = type.to_s.demodulize.downcase.to_sym unless type.is_a?(Symbol)
           case type
-            when :integer, :float, :decimal   then :text_field
-            when :string                      then :text_field
-            when :text                        then :text_area
-            when :boolean                     then :check_box
+            when :integer, :float, :decimal, :fixnum   then :text_field
+            when :string                               then :text_field
+            when :text                                 then :text_area
+            when :boolean                              then :check_box
             else :text_field
           end
         end
@@ -35,6 +35,7 @@ module Padrino
             when :activerecord then @klass.columns
             when :datamapper   then @klass.properties.map { |p| Column.new(p.name, p.primitive || p.type) }
             when :couchrest    then @klass.properties
+            when :ohm          then @klass.attributes.map { |p| Column.new(p, "String") }
             when :mongoid      then @klass.fields.values
             when :mongomapper  then @klass.keys.values.reject { |key| key.name == "_id" } # On MongoMapper keys are an hash
             when :sequel       then @klass.db_schema.map { |k,v| v[:type] = :text if v[:db_type] =~ /^text/i; Column.new(k, v[:type]) }
@@ -47,7 +48,7 @@ module Padrino
           column_fields    = columns.dup
           column_fields.reject! { |column| excluded_columns.include?(column.name.to_s) }
           @column_fields ||= column_fields.map do |column|
-            { :name => column.name, :field_type => field_type(column.type) }
+              { :name => column.name, :field_type => field_type(column.type) }
           end
         end
 
@@ -58,6 +59,7 @@ module Padrino
         def find(params=nil)
           case orm
             when :activerecord, :mongomapper, :mongoid then "#{klass_name}.find(#{params})"
+            when :ohm then (params = 'id'.to_sym ? "#{klass_name}[#{params}]" : "#{klass_name}.find(#{params}).first")
             when :datamapper, :couchrest   then "#{klass_name}.get(#{params})"
             when :sequel then "#{klass_name}[#{params}]"
             else raise OrmError, "Adapter #{orm} is not yet supported!"
@@ -82,14 +84,17 @@ module Padrino
         def update_attributes(params=nil)
           case orm
             when :activerecord, :mongomapper, :mongoid, :couchrest then "@#{name_singular}.update_attributes(#{params})"
-            when :datamapper then "@#{name_singular}.update(#{params})"
+            when :datamapper, :ohm then "@#{name_singular}.update(#{params})"
             when :sequel then "@#{name_singular}.modified! && @#{name_singular}.update(#{params})"
             else raise OrmError, "Adapter #{orm} is not yet supported!"
           end
         end
 
         def destroy
-          "#{name_singular}.destroy"
+          case orm
+            when :ohm then "#{name_singular}.delete"
+            else "#{name_singular}.destroy"
+          end
         end
       end # Orm
     end # Generators
