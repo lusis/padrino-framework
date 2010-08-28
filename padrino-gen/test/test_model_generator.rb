@@ -277,6 +277,36 @@ class TestModelGenerator < Test::Unit::TestCase
     end
   end
 
+  # RIPPLE
+  context "model generator using ripple" do
+    should "generate model file with no properties" do
+      silence_logger { generate(:project, 'sample_project', '--root=/tmp', '--script=none', '-d=ripple') }
+      silence_logger { generate(:model, 'person', '-r=/tmp/sample_project') }
+      assert_match_in_file(/class Person/, '/tmp/sample_project/app/models/person.rb')
+      assert_match_in_file(/include Ripple::Document/m, '/tmp/sample_project/app/models/person.rb')
+      assert_match_in_file(/self.bucket_name = "people_app_development"/m, '/tmp/sample_project/app/models/person.rb')
+    end
+
+    should "generate model file with given fields" do
+      silence_logger { generate(:project, 'sample_project', '--root=/tmp', '--script=none', '-d=ripple') }
+      silence_logger { generate(:model, 'user', "name:string", "age:integer", "email:string", '-r=/tmp/sample_project') }
+      assert_match_in_file(/class User/, '/tmp/sample_project/app/models/user.rb')
+      assert_match_in_file(/include Ripple::Document/, '/tmp/sample_project/app/models/user.rb')
+      assert_match_in_file(/self.bucket_name = "users_app_development"/m, '/tmp/sample_project/app/models/user.rb')
+      assert_match_in_file(/property :name, String/m, '/tmp/sample_project/app/models/user.rb')
+      assert_match_in_file(/property :age, Integer/m, '/tmp/sample_project/app/models/user.rb')
+      assert_match_in_file(/property :email, String/m, '/tmp/sample_project/app/models/user.rb')
+    end
+
+    should "generate model file with given files in a subapplication" do
+      silence_logger { generate(:project, 'sample_project', '--root=/tmp', '--script-none', '-d=ripple') }
+      silence_logger { generate(:app, 'subapp', '--root=/tmp/sample_project') }
+      silence_logger { generate(:model, 'user', '--app=subapp', '-r=/tmp/sample_project') }
+      assert_match_in_file(/class User/, '/tmp/sample_project/subapp/models/user.rb')
+      assert_match_in_file(/self.bucket_name = "users_subapp_development"/m, '/tmp/sample_project/subapp/models/user.rb')
+    end
+  end
+
   context "model generator testing files" do
     # BACON
     should "generate test file for bacon" do
